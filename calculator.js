@@ -29,7 +29,7 @@ OPERATOR_BTNS.forEach(btn => {
 CLEAR_BTN.addEventListener("click", () => wipeMemory());
 
 ENTER_BTN.addEventListener("click", () => {
-    if (!displayContent || displayContent === "Error") return;
+    if (!operator || !displayContent || displayContent === "Error") return;
     secondNum = displayContent.slice(2);
     if (!secondNum) return;
 
