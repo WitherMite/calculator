@@ -7,7 +7,7 @@ body {
     font-size: 5em;
 }
 
-.calculator {
+#calculator {
     margin: auto;
     width: 75vw;
     height: 100vw;
@@ -20,6 +20,7 @@ body {
 h2 {
     margin: 1rem;
     width: 75%;
+    height: 1.1em;
     background-color: grey;
     align-self: center;
 }
