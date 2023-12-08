@@ -16,6 +16,7 @@ NUM_PAD.forEach(btn => {
 OPERATOR_BTNS.forEach(btn => {
     btn.addEventListener("click", function () {
         if (operator || !displayContent) return;
+
         firstNum = displayContent;
         displayContent = this.textContent + " "
         operator = this.textContent;
@@ -23,14 +24,24 @@ OPERATOR_BTNS.forEach(btn => {
     });
 });
 
-CLEAR_BTN.addEventListener("click", () => {
+CLEAR_BTN.addEventListener("click", () => wipeMemory());
+
+ENTER_BTN.addEventListener("click", () => {
+    if (!displayContent) return;
+    secondNum = displayContent.slice(2);
+    if (!secondNum) return;
+
+    const result = operate(firstNum, operator, secondNum);
+    wipeMemory();
+    displayContent = result;
+    updateDisplay();
+});
+
+function wipeMemory () {
     firstNum = null;
     operator = null;
     secondNum = null;
-    clearDisplay();
-});
 
-function clearDisplay() {
     displayContent = "";
     updateDisplay();
 }
@@ -41,15 +52,18 @@ function updateDisplay() {
 }
 
 function operate(firstNum, operator, secondNum) {
+    x = Number(firstNum);
+    y = Number(secondNum);
+
     switch (operator) {
         case "+" :
-            return add(firstNum, secondNum);
+            return add(x, y);
         case "-" :
-            return subtract(firstNum, secondNum);
+            return subtract(x, y);
         case "*" :
-            return multiply(firstNum, secondNum);
+            return multiply(x, y);
         case "/" :
-            return divide(firstNum, secondNum);
+            return divide(x, y);
     }
 }
 
