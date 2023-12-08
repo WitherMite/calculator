@@ -8,6 +8,8 @@ let displayContent = "";
 
 NUM_PAD.forEach(btn => {
     btn.addEventListener("click", function () {
+        if (displayContent[6] || displayContent === "Error") return;
+
         displayContent += this.textContent;
         updateDisplay();
     });
@@ -15,10 +17,10 @@ NUM_PAD.forEach(btn => {
 
 OPERATOR_BTNS.forEach(btn => {
     btn.addEventListener("click", function () {
-        if (operator || !displayContent) return;
+        if (operator || !displayContent || displayContent === "Error") return;
 
         firstNum = displayContent;
-        displayContent = this.textContent + " "
+        displayContent = this.textContent + " ";
         operator = this.textContent;
         updateDisplay();
     });
@@ -27,13 +29,14 @@ OPERATOR_BTNS.forEach(btn => {
 CLEAR_BTN.addEventListener("click", () => wipeMemory());
 
 ENTER_BTN.addEventListener("click", () => {
-    if (!displayContent) return;
+    if (!displayContent || displayContent === "Error") return;
     secondNum = displayContent.slice(2);
     if (!secondNum) return;
 
     const result = operate(firstNum, operator, secondNum);
+    const roundedResult = roundResult(result);
     wipeMemory();
-    displayContent = result;
+    displayContent = roundedResult;
     updateDisplay();
 });
 
@@ -51,6 +54,18 @@ function updateDisplay() {
     console.log(`${firstNum} ${operator} ${secondNum} | ${displayContent}`);
 }
 
+function roundResult(result) {
+    if (result === "Error") return result;
+
+    if (result.toString().includes(".")) {
+        result = result.toPrecision(6);
+    } else if (result.toString().length > 6) {
+        result = result.toPrecision(3);
+    }
+
+    return result;
+}
+
 function operate(firstNum, operator, secondNum) {
     x = Number(firstNum);
     y = Number(secondNum);
@@ -63,6 +78,7 @@ function operate(firstNum, operator, secondNum) {
         case "*" :
             return multiply(x, y);
         case "/" :
+            if (secondNum === "0") return "Error";
             return divide(x, y);
     }
 }
