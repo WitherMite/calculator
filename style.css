@@ -1,0 +1,35 @@
+* {
+    box-sizing: border-box;
+}
+
+body {
+    text-align: center;
+    font-size: 5em;
+}
+
+.calculator {
+    margin: auto;
+    width: 75vw;
+    height: 100vw;
+    max-width: 67.5vh;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+}
+
+h2 {
+    margin: 1rem;
+    width: 75%;
+    background-color: grey;
+    align-self: center;
+}
+
+.buttonRow {
+    flex: 1 1 auto;
+    display: flex;
+}
+
+button {
+    flex: 1 1 25%;
+    font-size: 1em;
+}
