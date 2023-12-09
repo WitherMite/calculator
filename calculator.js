@@ -27,7 +27,7 @@ OPERATOR_BTNS.forEach(btn => {
     });
 });
 
-CLEAR_BTN.addEventListener("click", () => wipeMemory());
+CLEAR_BTN.addEventListener("click", wipeMemory);
 
 ENTER_BTN.addEventListener("click", () => {
     if (!operator || !displayContent || displayContent === "Error") return;
@@ -42,7 +42,7 @@ ENTER_BTN.addEventListener("click", () => {
     updateDisplay();
 });
 
-function wipeMemory () {
+function wipeMemory() {
     firstNum = null;
     operator = null;
     secondNum = null;
@@ -75,29 +75,13 @@ function operate(firstNum, operator, secondNum) {
 
     switch (operator) {
         case "+" :
-            return add(x, y);
+            return x + y;
         case "-" :
-            return subtract(x, y);
+            return x - y;
         case "*" :
-            return multiply(x, y);
+            return x * y;
         case "/" :
             if (secondNum === "0") return "Error";
-            return divide(x, y);
+            return x / y;
     }
-}
-
-function add(x, y) {
-    return x + y;
-}
-
-function subtract(x, y) {
-    return x - y;
-}
-
-function multiply(x, y) {
-    return x * y;
-}
-
-function divide(x, y) {
-    return x / y;
 }
