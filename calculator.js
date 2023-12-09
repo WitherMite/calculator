@@ -3,12 +3,13 @@ const OPERATOR_BTNS = document.querySelectorAll(".operatorBtn");
 const ENTER_BTN = document.querySelector(".enterBtn");
 const CLEAR_BTN = document.querySelector(".clearBtn");
 const DISPLAY = document.querySelector(".calcDisplay");
-let firstNum, operator, secondNum;
+const MAX_DIGITS = 6;
+let firstNum, operator, secondNum, prevAns;
 let displayContent = "";
 
 NUM_PAD.forEach(btn => {
     btn.addEventListener("click", function () {
-        if (displayContent[6] || displayContent === "Error") return;
+        if (displayContent[MAX_DIGITS] || (prevAns && !operator) || displayContent === "Error") return;
 
         displayContent += this.textContent;
         updateDisplay();
@@ -19,7 +20,7 @@ OPERATOR_BTNS.forEach(btn => {
     btn.addEventListener("click", function () {
         if (operator || !displayContent || displayContent === "Error") return;
 
-        firstNum = displayContent;
+        prevAns ? firstNum = prevAns : firstNum = displayContent;
         displayContent = this.textContent + " ";
         operator = this.textContent;
         updateDisplay();
@@ -37,6 +38,7 @@ ENTER_BTN.addEventListener("click", () => {
     const roundedResult = roundResult(result);
     wipeMemory();
     displayContent = roundedResult;
+    prevAns = result;
     updateDisplay();
 });
 
@@ -44,6 +46,7 @@ function wipeMemory () {
     firstNum = null;
     operator = null;
     secondNum = null;
+    prevAns = null;
 
     displayContent = "";
     updateDisplay();
@@ -51,19 +54,19 @@ function wipeMemory () {
 
 function updateDisplay() {
     DISPLAY.textContent = displayContent;
-    console.log(`${firstNum} ${operator} ${secondNum} | ${displayContent}`);
+    console.log(`${firstNum} ${operator} ${secondNum} | ${displayContent} ${prevAns}`);
 }
 
 function roundResult(result) {
     if (result === "Error") return result;
+    const tooLong = result.toString().length > MAX_DIGITS;
+    const decimalOnDisplay = result.toString().lastIndexOf(".", MAX_DIGITS) !== -1;
 
-    if (result.toString().includes(".")) {
-        result = result.toPrecision(6);
-    } else if (result.toString().length > 6) {
-        result = result.toPrecision(3);
-    }
-
-    return result;
+    if (tooLong) {
+        if (decimalOnDisplay) {
+            result = result.toPrecision(MAX_DIGITS);
+        } else result = result.toPrecision(MAX_DIGITS - 3);
+    } return result;
 }
 
 function operate(firstNum, operator, secondNum) {
