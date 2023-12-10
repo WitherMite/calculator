@@ -9,7 +9,7 @@ let displayContent = "";
 
 NUM_PAD.forEach(btn => {
     btn.addEventListener("click", function () {
-        if (displayContent[MAX_DIGITS] || (prevAns && !operator) || displayContent === "Error") return;
+        if (displayContent[MAX_DIGITS] || (prevAns && !operator) || checkMathError(displayContent)) return;
 
         displayContent += this.textContent;
         updateDisplay();
@@ -18,7 +18,7 @@ NUM_PAD.forEach(btn => {
 
 OPERATOR_BTNS.forEach(btn => {
     btn.addEventListener("click", function () {
-        if (operator || !displayContent || displayContent === "Error") return;
+        if (operator || !displayContent || checkMathError(displayContent)) return;
 
         prevAns ? firstNum = prevAns : firstNum = displayContent;
         displayContent = this.textContent + " ";
@@ -30,7 +30,7 @@ OPERATOR_BTNS.forEach(btn => {
 CLEAR_BTN.addEventListener("click", wipeMemory);
 
 ENTER_BTN.addEventListener("click", () => {
-    if (!operator || !displayContent || displayContent === "Error") return;
+    if (!operator || !displayContent || checkMathError(displayContent)) return;
     secondNum = displayContent.slice(2);
     if (!secondNum) return;
 
@@ -57,16 +57,46 @@ function updateDisplay() {
     console.log(`${firstNum} ${operator} ${secondNum} | ${displayContent} ${prevAns}`);
 }
 
+function checkMathError(input) {
+    return input === "Error" || input === "Overflow";
+}
+
 function roundResult(result) {
-    if (result === "Error") return result;
+    if (checkMathError(result)) return result;
     const tooLong = result.toString().length > MAX_DIGITS;
-    const decimalOnDisplay = result.toString().lastIndexOf(".", MAX_DIGITS) !== -1;
 
     if (tooLong) {
-        if (decimalOnDisplay) {
-            result = result.toPrecision(MAX_DIGITS);
-        } else result = result.toPrecision(MAX_DIGITS - 3);
-    } return result;
+        if (isCloseToZero(result) || isFarFromZero(result)) {
+            result = result.toExponential(MAX_DIGITS - 4);
+        } else if (result > -1 && result < 1) {
+            result = result.toFixed(MAX_DIGITS);
+        } else result = result.toPrecision(MAX_DIGITS);
+    }
+    if (isExponentTooLong(result)) return "Overflow";
+    return result;
+}
+
+function isExponentTooLong(num) {
+    num = num.toString();
+    const start = num.indexOf("e");
+    if (start === -1) return;
+
+    const exponent = num.slice(start);
+    if (exponent.length > 4) return true;
+}
+
+function isCloseToZero(result) {
+    const minDistFromZero = 1 / (10 ** MAX_DIGITS);
+    
+    if (result > 0 && result < minDistFromZero) return true;
+    if (result > (minDistFromZero * -1) && result < 0) return true;
+}
+
+function isFarFromZero(result) {
+    const maxDistFromZero = 10 ** MAX_DIGITS;
+    
+    if (result > maxDistFromZero) return true;
+    if (result < (maxDistFromZero * -1)) return true;
 }
 
 function operate(firstNum, operator, secondNum) {
