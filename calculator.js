@@ -47,7 +47,6 @@ function wipeMemory() {
     operator = null;
     secondNum = null;
     prevAns = null;
-
     displayContent = "";
     updateDisplay();
 }
@@ -64,14 +63,14 @@ function checkMathError(input) {
 function roundResult(result) {
     if (checkMathError(result)) return result;
     const tooLong = result.toString().length > MAX_DIGITS;
+    if (!tooLong) return result;
 
-    if (tooLong) {
-        if (isCloseToZero(result) || isFarFromZero(result)) {
-            result = result.toExponential(MAX_DIGITS - 4);
-        } else if (result > -1 && result < 1) {
-            result = result.toFixed(MAX_DIGITS);
-        } else result = result.toPrecision(MAX_DIGITS + 1);
-    }
+    if (isCloseToZero(result) || isFarFromZero(result)) {
+        result = result.toExponential(MAX_DIGITS - 4);
+    } else if (result > -1 && result < 1) {
+        result = result.toFixed(MAX_DIGITS);
+    } else result = result.toPrecision(MAX_DIGITS + 1);
+
     if (isExponentTooLong(result)) return "Overflow";
     return result;
 }
@@ -86,7 +85,7 @@ function isExponentTooLong(num) {
 
 function isCloseToZero(num) {
     const minDistFromZero = 1 / (10 ** MAX_DIGITS);
-    if (num < minDistFromZero && num > (minDistFromZero * -1)) return true;
+    if (num > (minDistFromZero * -1) && num < minDistFromZero) return true;
 }
 
 function isFarFromZero(num) {
