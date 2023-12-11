@@ -70,7 +70,7 @@ function roundResult(result) {
             result = result.toExponential(MAX_DIGITS - 4);
         } else if (result > -1 && result < 1) {
             result = result.toFixed(MAX_DIGITS);
-        } else result = result.toPrecision(MAX_DIGITS);
+        } else result = result.toPrecision(MAX_DIGITS + 1);
     }
     if (isExponentTooLong(result)) return "Overflow";
     return result;
@@ -90,8 +90,8 @@ function isCloseToZero(num) {
 }
 
 function isFarFromZero(num) {
-    const maxDistFromZero = 10 ** MAX_DIGITS;
-    if (num < (maxDistFromZero * -1) || num > maxDistFromZero) return true;
+    const maxDistFromZero = 10 ** (MAX_DIGITS + 1);
+    if (num <= (maxDistFromZero * -1) || num >= maxDistFromZero) return true;
 }
 
 function operate(firstNum, operator, secondNum) {
