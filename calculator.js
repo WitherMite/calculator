@@ -85,18 +85,18 @@ function isExponentTooLong(num) {
     if (exponent.length > 4) return true;
 }
 
-function isCloseToZero(result) {
+function isCloseToZero(num) {
     const minDistFromZero = 1 / (10 ** MAX_DIGITS);
     
-    if (result > 0 && result < minDistFromZero) return true;
-    if (result > (minDistFromZero * -1) && result < 0) return true;
+    if (num > 0 && num < minDistFromZero) return true;
+    if (num > (minDistFromZero * -1) && num < 0) return true;
 }
 
-function isFarFromZero(result) {
+function isFarFromZero(num) {
     const maxDistFromZero = 10 ** MAX_DIGITS;
     
-    if (result > maxDistFromZero) return true;
-    if (result < (maxDistFromZero * -1)) return true;
+    if (num > maxDistFromZero) return true;
+    if (num < (maxDistFromZero * -1)) return true;
 }
 
 function operate(firstNum, operator, secondNum) {
