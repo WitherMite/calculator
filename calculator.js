@@ -77,8 +77,7 @@ function roundResult(result) {
 }
 
 function isExponentTooLong(num) {
-    num = num.toString();
-    const start = num.indexOf("e");
+    const start = num.toString().indexOf("e");
     if (start === -1) return;
 
     const exponent = num.slice(start);
@@ -87,16 +86,12 @@ function isExponentTooLong(num) {
 
 function isCloseToZero(num) {
     const minDistFromZero = 1 / (10 ** MAX_DIGITS);
-    
-    if (num > 0 && num < minDistFromZero) return true;
-    if (num > (minDistFromZero * -1) && num < 0) return true;
+    if (num < minDistFromZero && num > (minDistFromZero * -1)) return true;
 }
 
 function isFarFromZero(num) {
     const maxDistFromZero = 10 ** MAX_DIGITS;
-    
-    if (num > maxDistFromZero) return true;
-    if (num < (maxDistFromZero * -1)) return true;
+    if (num < (maxDistFromZero * -1) || num > maxDistFromZero) return true;
 }
 
 function operate(firstNum, operator, secondNum) {
